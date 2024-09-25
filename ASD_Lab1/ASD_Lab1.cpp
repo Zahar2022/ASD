@@ -2,10 +2,41 @@
 //
 
 #include <iostream>
+#include <time.h>
+
+using namespace std;
+
+
+
 
 int main()
-{  //ASD
-    std::cout << "Hello World!\n";
+{
+	srand(time(0));
+	int number_of_cities, start_city;
+	cin >> number_of_cities;
+	cin >> start_city;
+	int** price;
+	price = new int* [number_of_cities];
+	for (int i = 0; i < number_of_cities; i++) {
+		price[i] = new int[number_of_cities];
+		for (int j = 0; j < number_of_cities; j++) {
+			price[i][j] = rand() % 50;
+		}
+	}
+
+
+	for (int i = 0; i < number_of_cities; i++) {
+			price[i][i] = 0;
+	}
+
+
+	for (int i = 0; i < number_of_cities; i++) {
+		for (int j = 0; j < number_of_cities; j++) {
+			cout << price[i][j] << " ";
+		}
+		cout << endl;
+	}
+
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
