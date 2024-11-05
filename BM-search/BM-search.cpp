@@ -28,7 +28,7 @@ using namespace std;
 
 string Boyer_Moore_Search(const vector<char>& s, const vector<char>& p) {
 
-    vector<int> TAB(256, 0); // Таблица сдвигов инициализируется нулями
+    vector<int> TAB(256, 0);
     int n = strlen(s.data());
     int m = strlen(p.data());
 
@@ -98,9 +98,9 @@ vector<int> Boyer_Moore_All(const vector<char>& s, const vector<char>& p) {
                 break;
             }
         }
-        if (j == -1) { // Если все символы совпали
-            index.push_back(i - m + 1); // Сохраняем индекс вхождения
-            i += 1; // Продолжаем поиск с следующей позиции
+        if (j == -1) { // если все символы совпали
+            index.push_back(i - m + 1); // сохраняем индекс вхождения
+            i += 1; // продолжаем поиск со следующей позиции
         }
     }
 
