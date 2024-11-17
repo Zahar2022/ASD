@@ -102,7 +102,7 @@ bool nextPermutation(int* array, int size) {
         array[right] = temp;
     }
 
-    return true;
+    return true; 
 }
 
 
