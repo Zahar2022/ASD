@@ -163,7 +163,7 @@ void findBestAndWorstPaths(int** distanceMatrix, int size, int startCity, int* c
         }
 
         delete[] fullPath;
-    } while (nextPermutation(cities, size - 1));
+    } while (nextPermutation(cities, size - 1)); 
 }
 
 
