@@ -83,7 +83,7 @@ void ShellHibbard(std::vector<int>& array) {
 
 
 bool isSorted(const std::vector<int>& arr) {
-    for (int i = 0; i < arr.size() - 1; i++) {
+    for (int i = 0; i < arr.size() - 1; ++i) {
         if (arr[i] > arr[i + 1]) {
             return false;
         }
@@ -92,6 +92,15 @@ bool isSorted(const std::vector<int>& arr) {
 }
 
 
+std::vector<int> generateRandomArray(size_t size, int minValue, int maxValue) {
+    std::vector<int> array(size);
+    std::srand(static_cast<unsigned int>(std::time(0)));
+    for (size_t i = 0; i < size; ++i) {
+        array[i] = minValue + std::rand() % (maxValue - minValue + 1);
+    }
+
+    return array;
+}
 
 
 
