@@ -135,7 +135,7 @@ int greedyAlgorithm(int** distanceMatrix, int size, int startCity, int* path) {
 
     delete[] visited;
 
-    return totalCost;
+    return totalCost; 
 }
 
 
