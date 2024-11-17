@@ -167,7 +167,7 @@ void findBestAndWorstPaths(int** distanceMatrix, int size, int startCity, int* c
 }
 
 
-void generateReport(int size) {
+ void generateReport(int size) {
     int** distanceMatrix = createDistanceMatrix(size);
     printDistanceMatrix(distanceMatrix, size);
 
