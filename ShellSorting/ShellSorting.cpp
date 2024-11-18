@@ -18,11 +18,10 @@
 
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <chrono>
-#include <fstream>
 #include <random>
+#include <fstream>
 #include <sstream>
+#include <chrono>
 #include <functional>
 
 
@@ -106,6 +105,38 @@ std::vector<int> generateRandomArray(size_t size, int minValue, int maxValue) {
 
 
 int main() {
+    std::vector<std::string> sortingNames = {"Knuth", "Default", "Hibbard"};
+
+    std::vector<std::function<void(std::vector<int>&)>> sortingAlgorithms = {
+        ShellKnuth,
+        ShellDefault,
+        ShellHibbard
+    };
+
+    for (int i = 10000; i <= 1000000; i *= 10)
+        for (int j = 10; j <= 100000; j *= 100) {
+            std::vector<int> originalArray = generateRandomArray(i, -j, j);
+            for (int index = 0; index < sortingAlgorithms.size(); ++index) {
+                const auto& sortName = sortingNames[index];
+                double totalTime = 0.0;
+                for (int run = 0; run < 3; ++run) {
+                    std::vector<int> arrCopy = originalArray;
+
+                    auto start = std::chrono::high_resolution_clock::now();
+
+
+                    sortingAlgorithms[index](arrCopy);
+
+                    auto end = std::chrono::high_resolution_clock::now();
+                    totalTime += std::chrono::duration<double>(end - start).count();
+
+                    if (!isSorted(arrCopy)) {
+                        std::cerr << "Error: array is not sorted correctly by " << sortName << "\n";
+                    }
+                }
+                std::cout << sortName << " for size " << i << " in range " << j << ": " << totalTime / 3.0 << " seconds" << "\n";
+            }
+        }
 
     return 0;
 }
