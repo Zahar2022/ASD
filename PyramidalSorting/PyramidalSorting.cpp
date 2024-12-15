@@ -75,11 +75,21 @@ std::vector<int> generateRandomArr(int size, int minValue, int maxValue) {
 }
 
 
+void writeArrayToFile(const std::string& filename, const std::vector<int>& arr) {
+    std::ofstream outFile(filename);
+    for (size_t i = 0; i < arr.size(); ++i) {
+        outFile << arr[i] << "  ";
+    }
+}
+
+
 int main()
 {
     for (int i = 10000; i <= 1000000; i *= 10)
         for (int j = 10; j <= 100000; j *= 100) {
             std::vector<int> originalArray = generateRandomArr(i, -j, j);
+            std::string filename = "array_" + std::to_string(i) + "_" + std::to_string(j) + ".txt";
+            writeArrayToFile(filename, originalArray);
 
             double totalTime = 0.0;
 
