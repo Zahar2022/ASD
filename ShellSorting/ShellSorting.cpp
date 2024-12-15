@@ -28,33 +28,33 @@
 
 void ShellDefault(std::vector<int>& arr) {
     int sizeArr = arr.size();
-    int g = sizeArr / 2;
+    int step = sizeArr / 2;
 
-    while (g > 0) {
-        for (int i = g; i < sizeArr; ++i) {
-            for (int j = i; j >= g && arr[j] < arr[j - g]; j -= g) {
-                std::swap(arr[j], arr[j - g]);
+    while (step > 0) {
+        for (int i = step; i < sizeArr; ++i) {
+            for (int j = i; j >= step && arr[j] < arr[j - step]; j -= step) {
+                std::swap(arr[j], arr[j - step]);
             }
         }
-        g /= 2;
+        step /= 2;
     }
 }
 
  
 void ShellKnuth(std::vector<int>& arr) {
     int sizeArr = arr.size();
-    int g = 1;
-    while (g < sizeArr / 3) {
-        g = 3 * g + 1;
+    int step = 1;
+    while (step < sizeArr / 3) {
+        step = 3 * step + 1;
     }
 
-    while (g >= 1) {
-        for (int i = g; i < sizeArr; ++i) {
-            for (int j = i; j >= g && arr[j] < arr[j - g]; j -= g) {
-                std::swap(arr[j], arr[j - g]);
+    while (step >= 1) {
+        for (int i = step; i < sizeArr; ++i) {
+            for (int j = i; j >= step && arr[j] < arr[j - step]; j -= step) {
+                std::swap(arr[j], arr[j - step]);
             }
         }
-        g /= 3;
+        step /= 3;
     }
 }
 
@@ -62,21 +62,21 @@ void ShellKnuth(std::vector<int>& arr) {
 void ShellHibbard(std::vector<int>& array) {
     int arraySize = array.size();
     int k = 1;
-    int g = 1;
+    int step = 1;
 
     while ((1 << k) - 1 < arraySize) {
         k++;
-        g = (1 << k) - 1;
+        step = (1 << k) - 1;
     }
 
-    while (g >= 1) {
-        for (int i = g; i < arraySize; ++i) {
-            for (int j = i; j >= g && array[j] < array[j - g]; j -= g) {
-                std::swap(array[j], array[j - g]);
+    while (step >= 1) {
+        for (int i = step; i < arraySize; ++i) {
+            for (int j = i; j >= step && array[j] < array[j - step]; j -= step) {
+                std::swap(array[j], array[j - step]);
             }
         }
         k--;
-        g = (1 << k) - 1;
+        step = (1 << k) - 1;
     }
 }
 
@@ -103,6 +103,16 @@ std::vector<int> generateRandomArray(size_t size, int minValue, int maxValue) {
 
 
 
+void writeArrayToFile(const std::string& filename, const std::vector<int>& arr) {
+    std::ofstream outFile(filename);
+    for (size_t i = 0; i < arr.size(); ++i) {
+        outFile << arr[i] << "  ";
+    }
+}
+
+
+
+
 
 int main() {
     std::vector<std::string> sortingNames = {"Knuth", "Default", "Hibbard"};
@@ -116,6 +126,8 @@ int main() {
     for (int i = 10000; i <= 1000000; i *= 10)
         for (int j = 10; j <= 100000; j *= 100) {
             std::vector<int> originalArray = generateRandomArray(i, -j, j);
+            std::string filename = "array_" + std::to_string(i) + "_" + std::to_string(j) + ".txt";
+            writeArrayToFile(filename, originalArray);
             for (int index = 0; index < sortingAlgorithms.size(); ++index) {
                 const auto& sortName = sortingNames[index];
                 double totalTime = 0.0;
