@@ -12,21 +12,22 @@
 #include <fstream>
 #include <random>
 #include <chrono>
+#include <string>
 
 
 
-std::vector<int> generateRandomArray(size_t size, int minValue, int maxValue) {
-    std::vector<int> array(size);
-    std::srand(static_cast<unsigned int>(std::time(0)));
+std :: vector<int> generateRandomArray(size_t size, int minValue, int maxValue) {
+    std :: vector<int> array(size);
+    std :: srand(static_cast<unsigned int>(std :: time(0)));
     for (size_t i = 0; i < size; ++i) {
-        array[i] = minValue + std::rand() % (maxValue - minValue + 1);
+        array[i] = minValue + std :: rand() % (maxValue - minValue + 1);
     }
 
     return array;
 }
 
 
-bool isSorted(const std::vector<int>& array) {
+bool isSorted(const std :: vector<int>& array) {
     for (size_t i = 1; i < array.size(); ++i) {
         if (array[i - 1] > array[i]) {
             return false;
@@ -36,9 +37,72 @@ bool isSorted(const std::vector<int>& array) {
 }
 
 
+void HoareSorting(std :: vector<int>& array, int left, int right) {
+    if (left >= right)
+        return;
+
+    int pivot = array[(left + right) / 2];
+    int i = left;
+    int j = right;
+
+    while (i <= j) {
+        while (array[i] < pivot) 
+            i++;
+        while (array[j] > pivot) 
+            j--;
+        if (i <= j) {
+            std :: swap(array[i], array[j]);
+            i++;
+            j--;
+        }
+    }
+
+    if (left < j)
+        HoareSorting(array, left, j);
+    if (i < right)
+        HoareSorting(array, i, right);
+}
+
+
+void writeArrayToFile(const std::string& filename, const std::vector<int>& arr) {
+    std::ofstream outFile(filename);
+    for (size_t i = 0; i < arr.size(); ++i) {
+        outFile << arr[i] << "  ";
+    }
+}
+
+
 
 int main()
 {
+    for (int i = 10000; i <= 1000000; i *= 10)
+        for (int j = 10; j <= 100000; j *= 100) {
+            std :: vector<int> originalArray = generateRandomArray(i, -j, j);
+            std::string filename = "array_" + std::to_string(i) + "_" + std::to_string(j) + ".txt";
+            writeArrayToFile(filename, originalArray);
+
+
+            int n = originalArray.size();
+            double totalTime = 0.0;
+
+            for (int run = 0; run < 3; ++run) {
+                std :: vector<int> arrCopy = originalArray;
+                auto start = std :: chrono :: high_resolution_clock :: now();
+
+                HoareSorting(arrCopy, 0, n - 1);
+
+                auto end = std :: chrono :: high_resolution_clock :: now();
+                totalTime += std :: chrono :: duration<double>(end - start).count();
+
+                if (!isSorted(arrCopy)) {
+                    std :: cerr << "Error: array is not sorted correctly" << "\n";
+                }
+            }
+
+            std :: cout << "For sorting on array of size " << i << " in range " << j << ": " << totalTime / 3.0 << " seconds" << "\n";
+        }
+
+    return 0;
     
 }
 
