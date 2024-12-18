@@ -26,7 +26,7 @@ findAll(0, 91), ответ : [15, 30, 38, 89]
 using namespace std;
 
 
-string Boyer_Moore_Search(const vector<char>& s, const vector<char>& p) {
+int Boyer_Moore_Search(const vector<char>& s, const vector<char>& p) {
 
     vector<int> TAB(256, 0);
     int n = strlen(s.data());
@@ -58,11 +58,11 @@ string Boyer_Moore_Search(const vector<char>& s, const vector<char>& p) {
             }
         }
         if (j == -1) { 
-            return "Found\nIndex: " + to_string(i - m + 1);
+            return i - m + 1;
         }
     }
 
-    return "Not found";
+    return -1;
 }
 
 
@@ -70,6 +70,7 @@ string Boyer_Moore_Search(const vector<char>& s, const vector<char>& p) {
 vector<int> Boyer_Moore_All(const vector<char>& s, const vector<char>& p) {
     vector<int> TAB(256, 0);
     vector<int> index;
+    vector<int> a = { -1 };
     int n = strlen(s.data());
     int m = strlen(p.data());
 
@@ -103,6 +104,47 @@ vector<int> Boyer_Moore_All(const vector<char>& s, const vector<char>& p) {
             i += 1; // продолжаем поиск со следующей позиции
         }
     }
+    return index;
+   
+}
+
+
+vector<int> FindAll(const vector<char>& s, const vector<char>& p, int left, int right) {
+    vector<int> index;
+    int n = right - left + 1;
+    int m = strlen(p.data());
+
+    if (n < m || left < 0 || right >= strlen(s.data())) {
+        return index;
+    }
+
+
+    vector<int> TAB(256, m);
+    for (int i = 0; i < m - 1; i++) {
+        TAB[p[i]] = m - 1 - i;
+    }
+
+    int i = left + m - 1; 
+    while (i < right + 1) {
+        int k = i;
+        int j = m - 1;
+
+        while (j >= 0 && k < n + left) {
+            if (s[k] == p[j]) {
+                k--;
+                j--;
+            }
+            else {
+                i += TAB[s[k]];
+                break;
+            }
+        }
+        if (j == -1) {
+            index.push_back(k + 1);
+            i+=1;
+        }
+    }
+
 
     return index;
 }
@@ -112,8 +154,8 @@ int main() {
 
     setlocale(LC_ALL, "Russian");
 
-    vector<char> s(80);
-    vector<char> p(40);
+    vector<char> s(100);
+    vector<char> p(100);
 
     cout << "Enter a sentence: ";
     cin.getline(s.data(), s.size());
@@ -121,14 +163,22 @@ int main() {
     cin.getline(p.data(), p.size());
 
  
-    string result = Boyer_Moore_Search(s, p);
-    cout << result << endl;
+    int  result = Boyer_Moore_Search(s, p);
+    cout << "Index of first occurance: " << result << endl;
 
-    vector<int> ind = Boyer_Moore_All(s, p);
+    vector<int> ind1 = Boyer_Moore_All(s, p);
     cout << "All occurrences: ";
-    for (int index : ind) {
-        cout << index << " ";
+    for (int index1 : ind1) {
+        cout << index1 << " ";
     }
+    cout << endl;
+
+    vector<int> ind2 = FindAll(s, p, 17, 91);
+    cout << "All occurances in defined range: ";
+    for (int index2 : ind2) {
+        cout << index2 << " ";
+    }
+    cout << endl;
 
     return 0;
 }
